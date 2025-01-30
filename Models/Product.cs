@@ -7,9 +7,8 @@ namespace Backend.Models
     {
         [Key]
         public int Id { get; set; } // Identificador primário no banco
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Uuid { get; set; } = Guid.NewGuid(); // UUID para consultas externas (somente leitura)
+        
         public string Name { get; set; }
         public string Category { get; set; }
         public string AnimalSpecie { get; set; } 
