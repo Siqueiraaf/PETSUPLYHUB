@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Backend.Data
 {
     // Configura o banco de dados e suas tabelas
-    public class PetDbContext(DbContextOptions<PetDbContext> options) : DbContext(options)
+    public class PetDbContext : DbContext 
     {
+        public PetDbContext(DbContextOptions<PetDbContext> options) : base(options) { }
+
         public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
