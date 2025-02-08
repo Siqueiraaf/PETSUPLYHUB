@@ -1,0 +1,37 @@
+# Pastas de build e compilação
+bin/
+obj/
+
+# Configuração do Visual Studio e Rider
+.vs/
+.vscode/
+.idea/
+*.csproj.user
+*.csproj.Transformation
+
+# Logs e arquivos temporários
+logs/
+*.log
+*.tlog
+*.dmp
+TestResults/
+
+# Configuração local e credenciais
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+.env
+
+# Certificados locais
+localhost.pfx
+localhost.cert
+
+# Configuração do NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Arquivos gerados pelo sistema operacional
+.DS_Store
+Thumbs.db
