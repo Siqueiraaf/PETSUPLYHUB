@@ -4876,11 +4876,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projetos\\PetSuplyHub\\Backend\\Backend.csproj",
+      "projectUniqueName": "d:\\Projetos\\PetSuplyHub\\Backend\\Backend.csproj",
       "projectName": "Backend",
-      "projectPath": "D:\\Projetos\\PetSuplyHub\\Backend\\Backend.csproj",
+      "projectPath": "d:\\Projetos\\PetSuplyHub\\Backend\\Backend.csproj",
       "packagesPath": "C:\\Users\\Siqueiraaf\\.nuget\\packages\\",
-      "outputPath": "D:\\Projetos\\PetSuplyHub\\Backend\\obj\\",
+      "outputPath": "d:\\Projetos\\PetSuplyHub\\Backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4970,7 +4970,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
