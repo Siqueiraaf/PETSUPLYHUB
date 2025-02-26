@@ -1,11 +1,10 @@
 namespace Backend.Contracts
 {
     public record CreateProductDto(
-        Guid PublicId,
         string Name,
-        string Description,
-        string Category,
         string AnimalSpecie,
+        string Category,
+        string Description,
         decimal Price
     );
 }

@@ -4,8 +4,10 @@ namespace Backend.Repositories
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAllAsync();
-        Task<Product> GetByPublicIdAsync(Guid publicId);
         Task AddProductAsync(Product product);
+        Task<Product?> GetByPublicIdAsync(Guid publicId);
+        Task<IEnumerable<Product>> GetAllAsync();
+        Task UpdateProductAsync(Product product); // Adicionado
+        Task DeleteProductAsync(Product product); // Adicionado
     }
 }

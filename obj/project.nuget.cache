@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "TZKGS76al+w=",
+  "dgSpecHash": "QU6Eofk63X8=",
   "success": true,
   "projectFilePath": "D:\\Projetos\\PetSuplyHub\\Backend\\Backend.csproj",
   "expectedPackageFiles": [
@@ -29,6 +29,7 @@
     "C:\\Users\\Siqueiraaf\\.nuget\\packages\\microsoft.entityframeworkcore.design\\9.0.1\\microsoft.entityframeworkcore.design.9.0.1.nupkg.sha512",
     "C:\\Users\\Siqueiraaf\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.1\\microsoft.entityframeworkcore.relational.9.0.1.nupkg.sha512",
     "C:\\Users\\Siqueiraaf\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\9.0.1\\microsoft.entityframeworkcore.sqlserver.9.0.1.nupkg.sha512",
+    "C:\\Users\\Siqueiraaf\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\9.0.1\\microsoft.entityframeworkcore.tools.9.0.1.nupkg.sha512",
     "C:\\Users\\Siqueiraaf\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.1\\microsoft.extensions.caching.abstractions.9.0.1.nupkg.sha512",
     "C:\\Users\\Siqueiraaf\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.1\\microsoft.extensions.caching.memory.9.0.1.nupkg.sha512",
     "C:\\Users\\Siqueiraaf\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.1\\microsoft.extensions.configuration.abstractions.9.0.1.nupkg.sha512",

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend.Services;
 using Backend.Repositories;
 using FluentValidation;
+using Backend.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +15,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateProductDtoValitator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductDtoValidator>();
 
-// Configuração do banco de dados
+// Configuração da conexão com o banco de dados
+var connectionString = builder.Configuration.GetConnectionString("ConnectionPadrao");
 builder.Services.AddDbContext<PetDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionPadrao")));
+    options.UseSqlServer(connectionString));
 
 // Configuração do OpenAPI (Swagger)
 builder.Services.AddOpenApi();
@@ -31,6 +33,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
 }
 
 app.UseHttpsRedirection();
