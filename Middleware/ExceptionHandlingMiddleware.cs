@@ -1,16 +1,19 @@
 using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.Http;
 
 namespace Backend.Middleware
 {
-    public class ExceptionHandlingMiddleware
+    public class ExceptionHandlingMiddleware : ErrorResponse
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        private readonly IWebHostEnvironment _env;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next)
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger, IWebHostEnvironment env)
         {
             _next = next;
+            _logger = logger;
+            _env = env;
         }
 
         public async Task Invoke(HttpContext context)
@@ -25,26 +28,33 @@ namespace Backend.Middleware
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var statusCode = exception switch
             {
                 ArgumentException => (int)HttpStatusCode.BadRequest,
                 KeyNotFoundException => (int)HttpStatusCode.NotFound,
+                UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
                 _ => (int)HttpStatusCode.InternalServerError
             };
 
-            var response = new
+            _logger.LogError(exception, "Erro inesperado: {Message}", exception.Message);
+
+            var response = new ErrorResponse
             {
-                message = exception.Message,
-                details = exception.InnerException?.Message,
-                stackTrace = exception.StackTrace
+                Message = exception.Message ?? "Ocorreu um erro inesperado.",
+                Details = _env.IsDevelopment() ? exception.InnerException?.Message : null,
+                StackTrace = _env.IsDevelopment() ? exception.StackTrace : null,
+                StatusCode = statusCode,
+                ErrorCode = Guid.NewGuid().ToString()
             };
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
 
-            return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            var jsonResponse = JsonSerializer.Serialize(response, 
+                options: new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            await context.Response.WriteAsync(jsonResponse);
         }
     }
 }

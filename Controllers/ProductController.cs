@@ -1,20 +1,23 @@
 using System.Net.Mime;
 using Backend.Contracts;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
-    [Route("/products")]
+    [Route("products")]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
     [ApiController]
-    public class ProductController(IProductService productService) : ControllerBase
+    public class ProductController(IProductService productService, IUpdateProductService updateProductService) : ControllerBase
     {
         private readonly IProductService _productService = productService;
+        private readonly IUpdateProductService _updateProductService = updateProductService;
 
         // Criar um novo produto
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
             var createdProduct = await _productService.CreateProductAsync(productDto);
@@ -39,14 +42,17 @@ namespace Backend.Controllers
 
         // Atualizar um produto pelo PublicId
         [HttpPatch("{publicId:guid}")]
-        public async Task<IActionResult> UpdateProduct(Guid publicId, [FromBody] CreateProductDto productDto)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateProduct(Guid publicId, [FromBody] UpdateProductDto productDto)
         {
-            await _productService.UpdateProductAsync(publicId, productDto);
-            return NoContent();
+            // O FluentValidation vai automaticamente validar o DTO antes de continuar a execução
+            var updatedProduct = await _updateProductService.UpdateProductAsync(publicId, productDto);
+            return Ok(updatedProduct); // Se passar na validação, retorna o produto atualizado
         }
 
         // Apagar um produto pelo PublicId
         [HttpDelete("{publicId:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(Guid publicId)
         {
             await _productService.DeleteProductAsync(publicId);
