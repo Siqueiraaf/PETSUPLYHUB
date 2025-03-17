@@ -7,6 +7,6 @@ public interface IUserAuthService
 {
     Task<IActionResult> RegisterUserAsync(RegisterUserDto model);
     Task<IActionResult> LoginUserAsync(LoginUserDto model);
-    Task<IActionResult> UpdateUserAsync(Guid userId,UpdateUserDto model); // Adiciona aqui
+    Task<IActionResult> UpdateUserAsync(Guid userId,UpdateUserDto model);
     Task<IActionResult> DeleteUserAsync(Guid userId);
 }

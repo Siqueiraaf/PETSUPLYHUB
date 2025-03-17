@@ -24,12 +24,6 @@ namespace Backend.Data
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasPrecision(18, 2);
-
-            // Criar papéis padrão (Admin e Cliente) sem GUIDs fixos
-            modelBuilder.Entity<IdentityRole<Guid>>().HasData(
-                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Admin", NormalizedName = "ADMIN" },
-                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Cliente", NormalizedName = "CLIENTE" }
-            );
         }
     }
 }

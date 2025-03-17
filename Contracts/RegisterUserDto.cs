@@ -6,4 +6,3 @@ public record RegisterUserDto(
     string Password,
     string Role
 );
-    

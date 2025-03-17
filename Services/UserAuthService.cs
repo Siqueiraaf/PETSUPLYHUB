@@ -111,7 +111,10 @@ public class UserAuthService : IUserAuthService
         };
 
         var userRoles = await _userRepository.GetUserRolesAsync(user);
-        claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+        foreach (var role in userRoles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],

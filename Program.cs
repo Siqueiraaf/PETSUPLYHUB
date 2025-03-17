@@ -20,7 +20,7 @@ builder.Services.AddDbContext<PetDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 // Configuração do Identity
-builder.Services.AddIdentity<Users, IdentityRole<Guid>>() // Definição do usuário e papel com GUID
+builder.Services.AddIdentity<Users, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<PetDbContext>()
     .AddDefaultTokenProviders();
 
@@ -57,6 +57,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserAuthService, UserAuthService>();
 builder.Services.AddScoped<IUpdateProductService, UpdateProductService>();
+builder.Services.AddScoped<IRoleInitializerService, RoleInitializerService>();
 
 // Registrar o serviço IUpdateUserService e sua implementação UpdateUserService
 builder.Services.AddScoped<IUpdateUserService, UpdateUserService>();
@@ -89,5 +90,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleInitializer = scope.ServiceProvider.GetRequiredService<IRoleInitializerService>();
+    await roleInitializer.EnsureRolesCreatedAsync();
+}
 
 app.Run();

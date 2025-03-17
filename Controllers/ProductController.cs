@@ -45,9 +45,8 @@ namespace Backend.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(Guid publicId, [FromBody] UpdateProductDto productDto)
         {
-            // O FluentValidation vai automaticamente validar o DTO antes de continuar a execução
             var updatedProduct = await _updateProductService.UpdateProductAsync(publicId, productDto);
-            return Ok(updatedProduct); // Se passar na validação, retorna o produto atualizado
+            return Ok(updatedProduct);
         }
 
         // Apagar um produto pelo PublicId
