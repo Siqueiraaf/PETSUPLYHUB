@@ -6,7 +6,7 @@ namespace Backend.Repositories
     {
         Task AddProductAsync(Product product);
         Task<Product?> GetByPublicIdAsync(Guid publicId);
-        Task<IEnumerable<Product>> GetAllAsync();
+        IQueryable<Product> GetAll();
         Task UpdateProductAsync(Product product); // Adicionado
         Task DeleteProductAsync(Product product); // Adicionado
     }

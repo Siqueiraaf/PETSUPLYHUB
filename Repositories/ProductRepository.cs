@@ -12,10 +12,11 @@ namespace Backend.Repositories {
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public IQueryable<Product> GetAll()
         {
-            return await _context.Products.ToListAsync();
+            return _context.Products.AsQueryable();
         }
+
 
         public async Task AddProductAsync(Product product)
         {

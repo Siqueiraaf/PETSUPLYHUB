@@ -17,11 +17,12 @@ namespace Backend.Controllers
 
         // Criar um novo produto
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
             var createdProduct = await _productService.CreateProductAsync(productDto);
-            return CreatedAtAction(nameof(GetProductById), new { publicId = createdProduct.PublicId }, createdProduct);
+            return CreatedAtAction(nameof(GetProductById), 
+            new { publicId = createdProduct.PublicId }, createdProduct);
         }
 
         // Buscar todos os produtos
