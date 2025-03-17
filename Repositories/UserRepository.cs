@@ -5,12 +5,12 @@ namespace Backend.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly UserManager<Users> _userManager;
-    private readonly SignInManager<Users> _signInManager; // Adicionado
+    private readonly SignInManager<Users> _signInManager;
     
     public UserRepository(UserManager<Users> userManager, SignInManager<Users> signInManager)
     {
         _userManager = userManager;
-        _signInManager = signInManager; // Injeção do SignInManager
+        _signInManager = signInManager;
     }
     
     public async Task<IdentityResult> CreateUserAsync(Users user, string password)

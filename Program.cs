@@ -58,6 +58,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserAuthService, UserAuthService>();
 builder.Services.AddScoped<IUpdateProductService, UpdateProductService>();
 builder.Services.AddScoped<IRoleInitializerService, RoleInitializerService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 // Registrar o serviço IUpdateUserService e sua implementação UpdateUserService
 builder.Services.AddScoped<IUpdateUserService, UpdateUserService>();

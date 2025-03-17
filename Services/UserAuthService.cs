@@ -5,36 +5,22 @@ using Backend.Contracts;
 using Backend.Models;
 using Backend.Repositories;
 using FluentValidation;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services;
-public class UserAuthService : IUserAuthService
+public class UserAuthService(
+    IUserRepository userRepository,
+    IConfiguration configuration,
+    IValidator<RegisterUserDto> registerValidator,
+    IValidator<UpdateUserDto> updateUserValidator,
+    IUpdateUserService updateUserService) : IUserAuthService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IUpdateUserService _updateUserService;
-    private readonly IConfiguration _configuration;
-    private readonly SignInManager<Users> _signInManager;
-    private readonly IValidator<RegisterUserDto> _registerValidator;
-    private readonly IValidator<UpdateUserDto> _updateUserValidator;
-    
-
-    public UserAuthService(
-        IUserRepository userRepository,
-        SignInManager<Users> signInManager,
-        IConfiguration configuration,
-        IValidator<RegisterUserDto> registerValidator,
-        IValidator<UpdateUserDto> updateUserValidator,
-        IUpdateUserService updateUserService) // Inject the validator in the constructor
-    {
-        _userRepository = userRepository;
-        _signInManager = signInManager;
-        _configuration = configuration;
-        _registerValidator = registerValidator;
-        _updateUserValidator = updateUserValidator; // Assign the validator here
-        _updateUserService = updateUserService;
-    }
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUpdateUserService _updateUserService = updateUserService;
+    private readonly IConfiguration _configuration = configuration;
+    private readonly IValidator<RegisterUserDto> _registerValidator = registerValidator;
+    private readonly IValidator<UpdateUserDto> _updateUserValidator = updateUserValidator;
 
     public async Task<IActionResult> RegisterUserAsync(RegisterUserDto model)
     {
@@ -56,26 +42,19 @@ public class UserAuthService : IUserAuthService
         if (!result.Succeeded) return new BadRequestObjectResult(result.Errors);
         
         await _userRepository.AddUserToRoleAsync(user, model.Role);
-        return new OkObjectResult(new { message = "Usuário registrado com sucesso!" });
-    }
-
-    public async Task<IActionResult> LoginUserAsync(LoginUserDto model)
-    {
-        var user = await _userRepository.FindUserByEmailAsync(model.Email);
-        if (user == null) return new UnauthorizedObjectResult("Usuário não encontrado");
-
-        var result = await _signInManager.PasswordSignInAsync(
-            user.UserName ?? string.Empty, 
-            model.Password, false, false);
-        if (!result.Succeeded) return new UnauthorizedObjectResult("Credenciais inválidas");
-
-        var token = await GenerateJwtToken(user);
-        return new OkObjectResult(new { Token = token });
+        return new OkObjectResult(
+            new { message = "Usuário registrado com sucesso!" });
     }
 
     public async Task<IActionResult> UpdateUserAsync(Guid userId, UpdateUserDto model)
     {
-        return await _updateUserService.UpdateUserAsync(userId,model);
+        var validationResult = await _updateUserValidator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+        {
+            return new BadRequestObjectResult(validationResult.Errors);
+        }
+
+        return await _updateUserService.UpdateUserAsync(userId, model);
     }
 
     public async Task<IActionResult> DeleteUserAsync(Guid userId)
@@ -83,13 +62,15 @@ public class UserAuthService : IUserAuthService
         var user = await _userRepository.FindUserByIdAsync(userId);
         if (user == null)
         {
-            return new NotFoundObjectResult(new { Success = false, Message = "Usuário não encontrado" });
+            return new NotFoundObjectResult(
+                new { Success = false, Message = "Usuário não encontrado" });
         }
 
         var result = await _userRepository.DeleteUserAsync(user);
         if (!result.Succeeded)
         {
-            return new BadRequestObjectResult(new { Success = false, Message = "Erro ao excluir o usuário", Errors = result.Errors });
+            return new BadRequestObjectResult(
+                new { Success = false, Message = "Erro ao excluir o usuário", Errors = result.Errors });
         }
 
         return new OkObjectResult(new { Success = true, Message = "Usuário excluído com sucesso!" });

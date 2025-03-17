@@ -9,10 +9,10 @@ namespace Backend.Controllers;
 [Produces(MediaTypeNames.Application.Json)]
 [Consumes(MediaTypeNames.Application.Json)]
 [ApiController]
-public class UserAuthController : ControllerBase
+public class UserController : ControllerBase
 {
     private readonly IUserAuthService _authService;
-    public UserAuthController(IUserAuthService authService)
+    public UserController(IUserAuthService authService)
     {
         _authService = authService;
     }
@@ -20,11 +20,6 @@ public class UserAuthController : ControllerBase
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
     {
         return await _authService.RegisterUserAsync(model);
-    }
-    [HttpPost("login")]
-    public async Task<IActionResult> LoginUser([FromBody] LoginUserDto model)
-    {
-        return await _authService.LoginUserAsync(model);
     }
 
     [HttpPut("update/{userId}")]
@@ -47,7 +42,6 @@ public class UserAuthController : ControllerBase
         // Retorna a resposta de sucesso
         return Ok(new { message = "Usuário atualizado com sucesso!" });  
     }
-
 
     [HttpDelete("delete/{userId}")]
     public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
@@ -85,4 +79,3 @@ public class UserAuthController : ControllerBase
         return StatusCode(500, "Erro inesperado.");
     }
 }
-
