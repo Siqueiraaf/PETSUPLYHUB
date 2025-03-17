@@ -60,8 +60,9 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
 ## Repositório e Persistência
 
-O repositório encapsula a lógica de acesso ao banco de dados, separando-a da lógica de negócio.
-Utiliza `IQueryable` para otimizar consultas e melhorar a performance.
+O repositório cuida do acesso ao banco de dados, separando essa parte da lógica de negócio. Ele usa `IEnumerable` para trabalhar com dados depois que são carregados na memória, o que dá mais flexibilidade para manipular os dados.
+
+Embora `IEnumerable` não seja tão eficiente quanto `IQueryable` para otimizar consultas no banco de dados, ele é útil quando a lógica de negócio precisa tratar os dados após a consulta ou quando já se tem os dados na memória. Isso simplifica as operações, mas pode afetar a performance se houver muitos dados.
 
 ## Middleware para Exceções
 
