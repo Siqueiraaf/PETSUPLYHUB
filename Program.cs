@@ -1,9 +1,6 @@
 using Backend.Data;
 using Backend.Models;
 using Backend.Repositories;
-using Backend.Services;
-using Backend.Validators;
-using Backend.Middleware;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FluentValidation.AspNetCore;
+using Backend.Services.Products;
+using Backend.Services.User;
+using Backend.Repositories.Implementations;
+using Backend.Services.LoginAuth;
+using Backend.Contracts.Validators;
+using Backend.Middleware.ErrorHandling;
 
 var builder = WebApplication.CreateBuilder(args);
 
