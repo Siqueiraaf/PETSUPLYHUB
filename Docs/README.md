@@ -27,12 +27,6 @@ Services
 ├───LoginAuth
 ├───Products
 ├───User
-obj
-└───Debug
-    └───net9.0
-        ├───ref
-        ├───refint
-        └───staticwebassets
 ```
 
 ### Descrição das Pastas
