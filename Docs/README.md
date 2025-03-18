@@ -7,28 +7,56 @@ Este documento detalha a estrutura do projeto, explicando suas funcionalidades e
 
 ```
 Contracts
-├───Controllers
-├───Data
-├───Middleware
-├───Migrations
-├───Models
-├───Properties
-├───Repositories
-├───Services
-└───Validators
+├───DTOs
+├───Validators
+Controllers
+├───Product
+├───User
+Data
+Docs
+Middleware
+├───Authentication
+├───ErrorHandling
+Migrations
+Models
+Properties
+Repositories
+├───Implementations
+├───Interfaces
+Services
+├───LoginAuth
+├───Products
+├───User
+obj
+└───Debug
+    └───net9.0
+        ├───ref
+        ├───refint
+        └───staticwebassets
 ```
 
 ### Descrição das Pastas
 
-- **Contracts**: Contém contratos (DTOs) utilizados no projeto.
+- **Contracts**: Contém contratos (DTOs) e validadores utilizados no projeto.
 - **Controllers**: Responsáveis por lidar com as requisições HTTP e chamar os serviços correspondentes.
+  - `Product`: Controlador de produtos.
+  - `User`: Controlador de usuários.
 - **Data**: Contém a configuração do `DbContext`, facilitando o acesso e a manipulação do banco de dados.
-- **Middleware**: Implementa manipulação de exceções e tratamento de erros globais.
+- **Docs**: Armazena documentação do projeto.
+- **Middleware**: Implementa manipulação de autenticação e tratamento de erros globais.
+  - `Authentication`: Middleware para autenticação.
+  - `ErrorHandling`: Middleware para tratamento de erros.
 - **Migrations**: Armazena as migrações para controle de versão do banco de dados.
 - **Models**: Define as entidades do sistema.
 - **Repositories**: Centraliza a lógica de acesso ao banco de dados, garantindo separação de preocupações.
-- **Services**: Contém a lógica de negócio da aplicação, sendo consumido pelos controllers.
-- **Validators**: Implementa validações com FluentValidation para maior organização e flexibilidade.
+  - `Implementations`: Implementação concreta dos repositórios.
+  - `Interfaces`: Interfaces dos repositórios.
+- **Services**: Contém a lógica de negócio da aplicação, sendo consumida pelos controllers.
+  - `LoginAuth`: Serviços de autenticação e login.
+  - `Products`: Serviços relacionados a produtos.
+  - `User`: Serviços relacionados a usuários.
+- **obj**: Pasta gerada automaticamente pelo .NET durante a compilação.
+- **Properties**: Contém arquivos de configuração do projeto.
 
 ## Modelagem de Dados
 
@@ -99,6 +127,4 @@ Exemplo de geração do token:
 ```csharp
 var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 ```
-
-
 
