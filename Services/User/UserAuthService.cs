@@ -24,7 +24,6 @@ public class UserAuthService(
 
     public async Task<IActionResult> RegisterUserAsync(RegisterUserDto model)
     {
-        // Validation of the RegisterUserDto before creating the user
         var validationResult = await _registerValidator.ValidateAsync(model);
         if (!validationResult.IsValid)
         {

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services.LoginAuth;
+
 public class LoginService : ILoginService
 {
     private readonly IUserRepository _userRepository;
@@ -23,10 +24,12 @@ public class LoginService : ILoginService
     public async Task<string?> AuthenticateUserAsync(string email, string password)
     {
         var user = await _userRepository.FindUserByEmailAsync(email);
-        if (user == null) return null;
+        if (user == null) 
+            return null; // Retorna null ao invés de lançar exceção
 
         var result = await _signInManager.PasswordSignInAsync(user.UserName ?? string.Empty, password, false, false);
-        if (!result.Succeeded) return null;
+        if (!result.Succeeded) 
+            return null; // Retorna null caso a senha esteja incorreta
 
         return await GenerateJwtToken(user);
     }
@@ -54,7 +57,7 @@ public class LoginService : ILoginService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(60),
+            expires: DateTime.UtcNow.AddMinutes(2),
             signingCredentials: creds
         );
 

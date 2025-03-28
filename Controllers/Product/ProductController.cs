@@ -10,44 +10,64 @@ namespace Backend.Controllers.Product;
 [Produces(MediaTypeNames.Application.Json)]
 [Consumes(MediaTypeNames.Application.Json)]
 [ApiController]
-public class ProductController(IProductService productService, IUpdateProductService updateProductService) : ControllerBase
+public class ProductController : ControllerBase
 {
-    private readonly IProductService _productService = productService;
-    private readonly IUpdateProductService _updateProductService = updateProductService;
-    // Criar um novo produto
+    private readonly IProductService _productService;
+    private readonly IUpdateProductService _updateProductService;
+
+    public ProductController(IProductService productService, IUpdateProductService updateProductService)
+    {
+        _productService = productService;
+        _updateProductService = updateProductService;
+    }
+
+    /// <summary>
+    /// Cria um novo produto (Apenas Admins).
+    /// </summary>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
     {
         var createdProduct = await _productService.CreateProductAsync(productDto);
-        return CreatedAtAction(nameof(GetProductById), 
-        new { publicId = createdProduct.PublicId }, createdProduct);
+        return CreatedAtAction(nameof(GetProductById), new { publicId = createdProduct.PublicId }, createdProduct);
     }
-    // Buscar todos os produtos
+
+    /// <summary>
+    /// Retorna todos os produtos.
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetAllProducts()
     {
         var products = await _productService.GetAllProductsAsync();
         return products.Any() ? Ok(products) : NoContent();
     }
-    // Buscar um produto pelo PublicId
+
+    /// <summary>
+    /// Retorna um produto pelo PublicId.
+    /// </summary>
     [HttpGet("{publicId:guid}")]
     public async Task<IActionResult> GetProductById(Guid publicId)
     {
         var product = await _productService.GetProductByIdAsync(publicId);
-        return Ok(product);
+        return product is not null ? Ok(product) : NotFound(new { Message = "Produto não encontrado" });
     }
-    // Atualizar um produto pelo PublicId
+
+    /// <summary>
+    /// Atualiza um produto pelo PublicId (Apenas Admins).
+    /// </summary>
     [HttpPatch("{publicId:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> UpdateProduct(Guid publicId, [FromBody] UpdateProductDto productDto)
     {
         var updatedProduct = await _updateProductService.UpdateProductAsync(publicId, productDto);
-        return Ok(updatedProduct);
+        return updatedProduct is not null ? Ok(updatedProduct) : NotFound(new { Message = "Produto não encontrado" });
     }
-    // Apagar um produto pelo PublicId
+
+    /// <summary>
+    /// Deleta um produto pelo PublicId (Apenas Admins).
+    /// </summary>
     [HttpDelete("{publicId:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> DeleteProduct(Guid publicId)
     {
         await _productService.DeleteProductAsync(publicId);

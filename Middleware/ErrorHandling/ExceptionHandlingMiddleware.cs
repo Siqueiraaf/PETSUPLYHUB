@@ -8,12 +8,14 @@ public class ExceptionHandlingMiddleware : ErrorResponse
     private readonly RequestDelegate _next;
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
     private readonly IWebHostEnvironment _env;
+
     public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger, IWebHostEnvironment env)
     {
         _next = next;
         _logger = logger;
         _env = env;
     }
+
     public async Task Invoke(HttpContext context)
     {
         try
@@ -25,6 +27,7 @@ public class ExceptionHandlingMiddleware : ErrorResponse
             await HandleExceptionAsync(context, ex);
         }
     }
+
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var statusCode = exception switch
@@ -32,9 +35,12 @@ public class ExceptionHandlingMiddleware : ErrorResponse
             ArgumentException => (int)HttpStatusCode.BadRequest,
             KeyNotFoundException => (int)HttpStatusCode.NotFound,
             UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+            InvalidOperationException => (int)HttpStatusCode.NotFound, // Adicionado tratamento para InvalidOperationException
             _ => (int)HttpStatusCode.InternalServerError
         };
+
         _logger.LogError(exception, "Erro inesperado: {Message}", exception.Message);
+
         var response = new ErrorResponse
         {
             Message = exception.Message ?? "Ocorreu um erro inesperado.",
@@ -43,10 +49,12 @@ public class ExceptionHandlingMiddleware : ErrorResponse
             StatusCode = statusCode,
             ErrorCode = Guid.NewGuid().ToString()
         };
+
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = statusCode;
         var jsonResponse = JsonSerializer.Serialize(response, 
             options: new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
         await context.Response.WriteAsync(jsonResponse);
     }
 }
